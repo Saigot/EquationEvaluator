@@ -14,6 +14,15 @@ public class StringParser {
     
     
     public Equation ParseString(String expr){
+        ArrayList<MathObject> bare = getBareRep(expr);
+        //while(bare.get(0).type == 3){
+        //    bare.remove(0);
+        //    bare.remove(bare.size()-1);
+        //}
+        System.out.println("Start Print:");
+        PrintBareBones(bare);
+        //find pivot
+        //parse right and left recursively
         
         return null;
     }
@@ -44,13 +53,19 @@ public class StringParser {
                 return false;
         }
     }
+    public boolean isOpenBracket(char b){
+        return b == '(' || b == '[' || b == '{';
+    }
+    
     public ArrayList<MathObject> getBareRep(String expr){
         boolean error = false;
         ArrayList<MathObject> raw = new ArrayList<>();
         char lastbrac = ' ';
         for(int i = 0; i < expr.length(); i++){
-            if(raw.get(raw.size()).type == 2 && (expr.charAt(i) == '+' || expr.charAt(i) == '-')){
+            if((i == 0 || raw.get(raw.size()-1).type == 2) 
+                    && (expr.charAt(i) == '+' || expr.charAt(i) == '-')){
                 Double Add = new Double(0);
+                System.out.println(expr.charAt(i));
                 i = scanNumber(i,expr,Add);
                 raw.add(new MathObject(Add.doubleValue()));
             }else if(isIgnored(expr.charAt(i))){
@@ -66,7 +81,9 @@ public class StringParser {
             }else if(isBracket(expr.charAt(i))){
                 if(lastbrac == ' '){
                     lastbrac = expr.charAt(i);
-                }else if (!BracketsClose(lastbrac, expr.charAt(i))){
+                    raw.add(new MathObject(expr.charAt(i),true));
+                }else if (!isOpenBracket(expr.charAt(i)) 
+                        && !BracketsClose(lastbrac, expr.charAt(i))){
                     error = true;
                     break;
                 }else{
@@ -78,6 +95,9 @@ public class StringParser {
                         Character.toString(expr.charAt(i)))));
             }
         }
+        if(error){
+            System.out.printf("Error!\n");
+        }
         return raw;
     }
     
@@ -87,6 +107,10 @@ public class StringParser {
             if(Character.isDigit(expr.charAt(i)) || expr.charAt(i) == '.'){
                 eval+=expr.charAt(i);
             }else{
+                System.out.println(eval);
+                if(eval.isEmpty()){
+                    return i;
+                }
                 val = Double.parseDouble(eval);
                 return i;
             }
@@ -109,5 +133,11 @@ public class StringParser {
             }
         }
         return org;
+    }
+    
+    public void PrintBareBones(ArrayList<MathObject> m){
+        for(MathObject math : m){
+            math.PrintRepresentation();
+        }
     }
 }

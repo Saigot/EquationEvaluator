@@ -53,4 +53,23 @@ public class MathObject {
                 return bracket == m.bracket;
         }
     }
+    
+    public void PrintRepresentation(){
+        switch(type){
+            case 0:
+                System.out.print(var);
+                break;
+            case 1:
+                System.out.print(val);
+                break;
+            case 2:
+                System.out.print(Operator.toString());
+                break;
+            case 3:
+                System.out.print(bracket);
+                break;
+            default:
+                System.out.print(" Err ");
+        }
+    }
 }
