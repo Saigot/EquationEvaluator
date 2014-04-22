@@ -18,6 +18,9 @@ public enum Operation {
         value = c;
         Priority = p;
     }
+    public void setValue(Operation op){
+        value = op.GetSymbol();
+    }
     public int GetPriority(){
         return Priority;
     }
@@ -44,30 +47,30 @@ public enum Operation {
                 //error
                 return NONE;
     }}
-    static public Operation GetValue(String c){
+    static public Operation GetType(String c){
         c = c.toLowerCase();
         switch(c){
+            case "fac":
+                return FAC;
+            case "abs":
+                return ABS;
+            case "sin":
+                return SIN;
+            case "cos":
+                return COS;
+            case "tan":
+                return TAN;
+            case "sih":
+                return SIH;
+            case "coh":
+                return COH;
+            case "tah":
+                return TAH;
+            case "log":
+                return LOG;
             case "^":
                 return EXP;
-            case "&fac":
-                return FAC;
-            case "&mod":
-            case "&abs":
-                return ABS;
-            case "&sin":
-                return SIN;
-            case "&cos":
-                return COS;
-            case "&tan":
-                return TAN;
-            case "&sih":
-                return SIH;
-            case "&coh":
-                return COH;
-            case "&tah":
-                return TAH;
-            case "&log":
-                return LOG;
+            case "mod":
             case "%":
                 return DIF;
             case "*":
@@ -78,7 +81,6 @@ public enum Operation {
                 return ADD;
             case "-":
                 return ADD;
-            case " ":
             default:
                 //error
                 return NONE;
