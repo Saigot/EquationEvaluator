@@ -4,13 +4,13 @@
  */
 package equationevaluator;
 public enum Operation {
-    NONE (" ",Integer.MAX_VALUE),
+    
     EXP ("^",0), LOG("&log",0),
     FAC("&fac",0), ABS("&abs",0),
     SIN("&sin",0), COS("&cos",0),TAN("&tan",0),
     SIH("&sih", 0), COH("&coh",0),TAH("&tah", 0),
     MULT ("*",1),DIV ("/",1),DIF("%",1),
-    ADD ("+",2);
+    ADD ("+",2), SUB("-",2),NONE (" ",Integer.MAX_VALUE);
     
     private String value;
     private int Priority;
@@ -80,7 +80,7 @@ public enum Operation {
             case "+":
                 return ADD;
             case "-":
-                return ADD;
+                return SUB;
             default:
                 //error
                 return NONE;

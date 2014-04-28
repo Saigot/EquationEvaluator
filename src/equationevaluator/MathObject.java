@@ -14,18 +14,19 @@ public class MathObject {
     Operation Operator;
     char bracket;
     
-    int type;// 0 for var, 1 for val and 2 for operator, 3 for bracket
+    int type;// -1, indeterminint, 0 for var, 1 for val and 2 for operator, 3 for bracket
     public MathObject(char c){
         var = c;
         type = 0;
     }
+    
     public MathObject(char c, boolean brac){
         if(brac){
-            var = c;
-            type = 0;
-        }else{
             bracket = c;
             type = 3;
+        }else{
+            var = c;
+            type = 0;
         }
     }
     
@@ -38,6 +39,27 @@ public class MathObject {
         Operator = op;
         type = 2;
     }
+      public MathObject(){
+          type = -1;
+      }
+    
+    public void setVar(char c){
+       type = 0;
+       var = c;
+    }
+    public void setVal(double d){ //hehe double d
+        type = 1;
+        val = d;
+    }
+    public void setOperation(Operation op){
+        type = 2;
+        Operator = op;
+    }
+    public void setBracket(char c){
+        type = 3;
+        bracket = c;
+    }
+    
     public boolean isEqual(MathObject m){
         if(m.type != type){
             return false;
@@ -49,8 +71,10 @@ public class MathObject {
                 return val == m.val;
             case 2:
                 return Operator == m.Operator;
-            default:
+            case 3:
                 return bracket == m.bracket;
+            default: 
+                return false; //indeterminent is always false
         }
     }
     
