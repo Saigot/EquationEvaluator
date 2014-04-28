@@ -71,17 +71,6 @@ public class StringParser {
         }else{
             pivobj = new MathObject();
         }
-        
-        //if(pivobj.type == MathObject.VAL_TYPE || pivobj.type == MathObject.VAR_TYPE){
-        //    root.isLeaf = true;
-        //    if(pivobj.type == MathObject.VAR_TYPE){
-        //        root.isVar = true;
-        //        root.var = pivobj.var;
-        //    }else{
-        //        root.isVar = false;
-        //        root.val = pivobj.val;
-        //    }
-        //}else 
         if(piv != -1){
             root.op = pivobj.Operator;
             Monomial m = BareToEq_aux(b, start, piv-1);
@@ -101,6 +90,8 @@ public class StringParser {
             MathObject m = GetNextTerm(b, start, end);
             if(m.type == MathObject.VAL_TYPE){
                 return new Monomial(m.val);
+            }else if(m.type == MathObject.VAR_TYPE){
+                return new Monomial(m.var);
             }
         }
         if(root == null){
