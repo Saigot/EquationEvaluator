@@ -4,7 +4,9 @@
  */
 package equationevaluator;
 
+import com.sun.xml.internal.ws.api.pipe.NextAction;
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -16,23 +18,151 @@ public class StringParser {
     
     
     public Equation ParseString(String expr){
+        boolean debug = true;
         ArrayList<MathObject> bare = getBareRep(expr);
         //while(bare.get(0).type == 3){
         //    bare.remove(0);
         //    bare.remove(bare.size()-1);
         //}
-        System.out.println("Start Print:");
-        PrintBareBones(bare);
-        //find pivot
-        //parse right and left recursively
-        
+        Equation eq = BareToEq(bare);
+        if(debug){
+            System.out.println("Start Bare Print:");
+            PrintBareBones(bare);
+            
+            System.out.println("\nStart Equation Print");
+            eq.PrintRepresentation();
+        }
         return null;
     }
-    
+    public Equation BareToEq(ArrayList<MathObject> b){
+        String vars = "";
+        for(MathObject m : b){
+            if(m.type == MathObject.VAR_TYPE && vars.indexOf(m.var) != -1){
+                vars += m.var;
+            }
+        }
+        int start = 0;
+        int end = b.size()-1;
+        return new Equation(BareToEq_aux(b,start,end),vars);
+    }
+    private MathObject GetNextTerm(ArrayList<MathObject> b, int start, int end){
+        for(int i = start; i <= end; i++){
+            if(b.get(i).type == MathObject.VAL_TYPE || b.get(i).type == MathObject.VAR_TYPE){
+                return b.get(i);
+            }
+        }
+        return new MathObject();
+    }
+    private Monomial BareToEq_aux(ArrayList<MathObject> b, int start, int end){
+        boolean debug = true;
+        if(debug){
+            System.out.printf("Printing from %d to %d\n",start,end);
+            PrintBareBones(b,start,end);
+            System.out.println();
+        }
+        boolean error = false;
+        Monomial root = new Monomial();
+        int pri = 0;
+        int lvl = 0;
+        int piv = GetPivot(b,start,end,pri,lvl);
+        MathObject pivobj;
+        if(piv != -1){
+            pivobj = b.get(piv);
+        }else{
+            pivobj = new MathObject();
+        }
+        
+        //if(pivobj.type == MathObject.VAL_TYPE || pivobj.type == MathObject.VAR_TYPE){
+        //    root.isLeaf = true;
+        //    if(pivobj.type == MathObject.VAR_TYPE){
+        //        root.isVar = true;
+        //        root.var = pivobj.var;
+        //    }else{
+        //        root.isVar = false;
+        //        root.val = pivobj.val;
+        //    }
+        //}else 
+        if(piv != -1){
+            root.op = pivobj.Operator;
+            Monomial m = BareToEq_aux(b, start, piv-1);
+            if(m != null){
+                root.left = m;
+            }else{
+                root.left = new Monomial(1);
+            }
+            m = BareToEq_aux(b, piv+1, end);
+            if(m != null){
+                root.right = m;
+            }else{
+                root.right = new Monomial(1);
+            }
+            
+        }else{
+            MathObject m = GetNextTerm(b, start, end);
+            if(m.type == MathObject.VAL_TYPE){
+                return new Monomial(m.val);
+            }
+        }
+        if(root == null){
+            root = new Monomial(1);
+        }
+        
+        return root;
+    }
+    public int GetPivot(ArrayList<MathObject> b, int start, int priority, int level){
+        return GetPivot(b, start, b.size()-1,priority, level);
+    }
+    public int GetPivot(ArrayList<MathObject> b, int start, int end, int priority, int level){
+        boolean debug = true;
+        if(debug){
+                System.out.println("Starting Pivot search");}
+        if(b.size() <= 1){
+            if(debug){
+                System.out.println("Starting Pivot search");
+                System.out.printf("Size is %d\n",b.size());
+            }
+            return 0;
+        }
+        int index = -1;
+        int pri = -1;
+        int lvl = -1;
+        for(int i = start; i <= end; i++){
+            MathObject obj = b.get(i);
+            switch(obj.type){
+                case MathObject.VAR_TYPE:
+                    break;
+                case MathObject.VAL_TYPE:
+                    break;
+                case MathObject.OP_TYPE:
+                    System.out.println("I Found " + obj.Operator.toString());
+                    int thispri = obj.Operator.GetPriority();
+                    if((thispri >= priority && level <= 0)
+                            && (index == -1 || level > lvl || (thispri < pri && level == lvl))){
+                        System.out.printf("I Selected %s at %d %d\n",
+                                obj.Operator.toString(),i,level);
+                        index = i;
+                        pri = thispri;
+                        lvl = level;
+                    }
+                    break;
+                case MathObject.BRAC_TYPE:
+                    if(isOpenBracket(obj.bracket)){
+                        level--;
+                        //System.out.println("Level Down, is now " + level);
+                    }else{
+                        level++;
+                        //System.out.println("Level Up, is now " + level);
+                    }
+                    break;
+            }
+        }
+        System.out.println("Returning the Pivot:" + index);
+        return index;
+    }
     public int findNextOperand(String expr, int pri){
         
         return 0;
-    }
+    }    
     
     public boolean isIgnored(char c){
         return c == ' ';
@@ -60,8 +190,8 @@ public class StringParser {
     }
     
     public ArrayList<MathObject> getBareRep(String expr){
-        boolean error = false;
-        boolean debug = true;
+        boolean error = false;//false;
+        boolean debug = false;
         ArrayList<MathObject> raw = new ArrayList<>();
         Stack<Character> lastbrac =  new Stack<>();
         lastbrac.add(new Character('\0'));
@@ -174,6 +304,12 @@ public class StringParser {
     public void PrintBareBones(ArrayList<MathObject> m){
         for(MathObject math : m){
             math.PrintRepresentation();
+        }
+    }
+    public void PrintBareBones(ArrayList<MathObject> m, int start, int end){
+        if (start > end) return;
+        for(int i = start; i <= end; i++){
+            m.get(i).PrintRepresentation();
         }
     }
 }

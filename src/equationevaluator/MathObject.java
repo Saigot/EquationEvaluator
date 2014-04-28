@@ -9,6 +9,12 @@ package equationevaluator;
  * @author michael
  */
 public class MathObject {
+    static final int NO_TYPE = -1;
+    static final int VAR_TYPE = 0;
+    static final int VAL_TYPE = 1;
+    static final int OP_TYPE = 2;
+    static final int BRAC_TYPE = 3;
+    
     char var;
     double val;
     Operation Operator;

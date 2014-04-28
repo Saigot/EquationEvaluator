@@ -14,6 +14,10 @@ public class Equation {
     Monomial root;
     String vars;
     
+    public Equation(Monomial ROOT, String VARS){
+        root = ROOT;
+        vars = VARS;
+    }
     public void Simplify(){
         
     }
@@ -26,5 +30,9 @@ public class Equation {
     public double peekAt(String vars, double ... val){
         
         return 0;
+    }
+    
+    public void PrintRepresentation(){
+        root.PrintRepresentation();
     }
 }

@@ -29,7 +29,7 @@ public class EquationEvaluator {
         //}
         expr = "(((+1-+3)*(-3/+4)-abs(-10)))";
         //expr = "({[([()])]})";
-        //expr = "1+1";
+        //expr = "(1+1)";
         System.out.println(expr);
         StringParser str = new StringParser();
         str.ParseString(expr);

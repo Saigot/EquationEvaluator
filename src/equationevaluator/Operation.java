@@ -5,10 +5,10 @@
 package equationevaluator;
 public enum Operation {
     
-    EXP ("^",0), LOG("&log",0),
-    FAC("&fac",0), ABS("&abs",0),
-    SIN("&sin",0), COS("&cos",0),TAN("&tan",0),
-    SIH("&sih", 0), COH("&coh",0),TAH("&tah", 0),
+    EXP ("^",0), LOG("&log",3),
+    FAC("&fac",3), ABS("&abs",3),
+    SIN("&sin",3), COS("&cos",3),TAN("&tan",3),
+    SIH("&sih", 3), COH("&coh",3),TAH("&tah", 3),
     MULT ("*",1),DIV ("/",1),DIF("%",1),
     ADD ("+",2), SUB("-",2),NONE (" ",Integer.MAX_VALUE);
     
