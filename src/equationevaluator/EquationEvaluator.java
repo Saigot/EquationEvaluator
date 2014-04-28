@@ -30,11 +30,13 @@ public class EquationEvaluator {
         //expr = "(((+1-+3)*(-3/+4)-abs(-10)))";
         //expr = "({[([()])]})";
         //expr = "(1+1)";
-        expr = "(1+x)";
+        expr = "1+2+3+4+5+5*5*4/2+ 4^2";
+        //expr = "2^2";
         System.out.println(expr);
         StringParser str = new StringParser();
         Equation eq = str.ParseString(expr);
-        //System.out.println(eq.peekAt("x", 67));
+        System.out.println();
+        //System.out.println(eq.peekAt("x", 1));
         
     }
 }

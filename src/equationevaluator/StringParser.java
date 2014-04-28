@@ -199,7 +199,7 @@ public class StringParser {
                         raw.get(raw.size() - 1).PrintRepresentation();
                         System.out.print(" is type " + raw.get(raw.size() - 1).type);
                     }
-                    System.out.print(" , Treated as Number");
+                    System.out.println(", Treated as Number");
                 }
                 MathObject obj = new MathObject();
                 i = scanNumber(i,expr,obj);
@@ -272,7 +272,15 @@ public class StringParser {
                 return i-1;
             }
         }
-        return i-1;
+        if (eval.isEmpty()) {
+            return i - 1;
+        }
+        double d = Double.parseDouble(eval);
+        if (first == '-') {
+            d *= -1;
+        }
+        val.setVal(d);
+        return i - 1;
     }
     public int scanFunctions(int i, String Expr, MathObject op){
         int org = i;

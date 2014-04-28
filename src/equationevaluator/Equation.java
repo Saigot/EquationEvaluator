@@ -28,8 +28,7 @@ public class Equation {
     }
     
     public double peekAt(String vars, double ... val){
-        
-        return 0;
+        return root.PeekAt(vars, val);
     }
     
     public void PrintRepresentation(){

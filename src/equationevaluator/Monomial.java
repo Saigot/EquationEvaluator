@@ -64,7 +64,7 @@ public class Monomial {
         }else{
             return op.Eval(left.PeekAt(vars,vals), right.PeekAt(vars,vals));
         }
-        return 0;
+        return val;
     }
     
     public void PrintRepresentation(){
