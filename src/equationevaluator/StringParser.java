@@ -32,7 +32,7 @@ public class StringParser {
             System.out.println("\nStart Equation Print");
             eq.PrintRepresentation();
         }
-        return null;
+        return eq;
     }
     public Equation BareToEq(ArrayList<MathObject> b){
         String vars = "";
@@ -191,7 +191,7 @@ public class StringParser {
     
     public ArrayList<MathObject> getBareRep(String expr){
         boolean error = false;//false;
-        boolean debug = false;
+        boolean debug = true;
         ArrayList<MathObject> raw = new ArrayList<>();
         Stack<Character> lastbrac =  new Stack<>();
         lastbrac.add(new Character('\0'));
@@ -225,8 +225,8 @@ public class StringParser {
                 MathObject ADD = new MathObject();
                 i = scanFunctions(i, expr, ADD);
                 if(ADD.Operator == Operation.NONE){
-                    if(debug) System.out.print(":Treated as Brac");
-                    ADD.setBracket(c);
+                    if(debug) System.out.print(":Treated as Var");
+                    ADD.setVar(c);
                 }else{
                     if(debug) System.out.print(":Treated as Function");
                 }

@@ -17,7 +17,7 @@ public class MathObject {
     
     char var;
     double val;
-    Operation Operator;
+    Operation Operator = Operation.NONE;
     char bracket;
     
     int type;// -1, indeterminint, 0 for var, 1 for val and 2 for operator, 3 for bracket

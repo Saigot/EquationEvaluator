@@ -27,11 +27,14 @@ public class EquationEvaluator {
         //} catch (IOException ex) {
         //    expr = "Error";
         //}
-        expr = "(((+1-+3)*(-3/+4)-abs(-10)))";
+        //expr = "(((+1-+3)*(-3/+4)-abs(-10)))";
         //expr = "({[([()])]})";
         //expr = "(1+1)";
+        expr = "(1+x)";
         System.out.println(expr);
         StringParser str = new StringParser();
-        str.ParseString(expr);
+        Equation eq = str.ParseString(expr);
+        //System.out.println(eq.peekAt("x", 67));
+        
     }
 }
