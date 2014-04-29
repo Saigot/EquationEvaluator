@@ -32,14 +32,14 @@ public class EquationEvaluator {
         //expr = "(1+1)";
         //expr = "(log(x))";
         //expr = "2^2";
-        expr = "(((+1-+3)*(-3/+4)-abs(-10x)))";
+        expr = "(((+1-+3)*(-3/+4)-abs(x)))";
         System.out.println(expr);
         StringParser str = new StringParser();
         Equation eq = str.ParseString(expr);
         System.out.println();
         eq.PrintTreeRepresentation();
         System.out.println();
-        System.out.println(eq.peekAt("x", 1));
+        System.out.println(eq.peekAt("x", 10));
         
     }
 }

@@ -64,8 +64,10 @@ public class Monomial {
         }else{
             val = op.Eval(left.PeekAt(vars,vals), right.PeekAt(vars,vals));
         }
-        if(debug){PrintRepresentation();
-         System.out.println("     Evaluated to: " + val);}
+        if(debug){
+            String res = PrintStrRepresentation();
+            System.out.printf("%-50s Evaluated to: %f\n", res, val);
+        }
         return val;
     }
     
@@ -107,5 +109,26 @@ public class Monomial {
             System.out.print(")");
         }
         
+    }
+    public String PrintStrRepresentation(){
+        String res = "";
+        if(isLeaf){
+            if(isVar){
+                res +=(var);
+            }else{
+                res +=(val);
+            }
+        }else{
+            res +=("(");
+            if(left != null)
+            res +=left.PrintStrRepresentation();
+            if(op != null)
+            res +=(op.toString());
+            if(right != null)
+            res+=right.PrintStrRepresentation();
+            
+            res +=(")");
+        }
+        return res;
     }
 }
