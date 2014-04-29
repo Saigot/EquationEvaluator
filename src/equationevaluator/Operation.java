@@ -5,12 +5,12 @@
 package equationevaluator;
 public enum Operation {
     
-    EXP ("^",0), LOG("&log",3),
+    EXP ("^",3), LOG("&log",3),
     FAC("&fac",3), ABS("&abs",3),
     SIN("&sin",3), COS("&cos",3),TAN("&tan",3),
     SIH("&sih", 3), COH("&coh",3),TAH("&tah", 3),
-    MULT ("*",1),DIV ("/",1),DIF("%",1),
-    ADD ("+",2), SUB("-",2),NONE (" ",Integer.MAX_VALUE);
+    MULT ("*",2),DIV ("/",2),DIF("%",2),
+    ADD ("+",1), SUB("-",1),NONE (" ",Integer.MIN_VALUE);
     
     private String value;
     private int Priority;
@@ -124,6 +124,8 @@ public enum Operation {
                return val1 / val2;
             case ADD:
                 return val1 + val2;
+            case SUB:
+                return val1-val2;
             case ABS:
                 return val1 * Math.abs(val2);
             case LOG:

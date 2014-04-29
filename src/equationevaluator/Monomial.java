@@ -3,7 +3,6 @@
  * and open the template in the editor.
  */
 package equationevaluator;
-
 /**
  *
  * @author michael
@@ -52,19 +51,41 @@ public class Monomial {
     }
     
     public double PeekAt(String vars, double ... vals){
+        boolean debug = true;
         if(isLeaf){
             if(isVar){
                 int index = vars.indexOf(var);
                 if(index == -1){
-                    return 0;
+                    val = 0;
                 }else{
-                    return vals[index];
+                    val = vals[index];
                 }
             }
         }else{
-            return op.Eval(left.PeekAt(vars,vals), right.PeekAt(vars,vals));
+            val = op.Eval(left.PeekAt(vars,vals), right.PeekAt(vars,vals));
         }
+        if(debug){PrintRepresentation();
+         System.out.println("     Evaluated to: " + val);}
         return val;
+    }
+    
+    
+    public void PrintTreeRepresentation(int depth){
+        String print = Integer.toString(depth) + ". ";
+        if(isLeaf){
+            if(isVar){
+                print += var;
+            }else{
+                print += Double.toString(val);
+            }
+        }else{
+            print += op.toString();
+        }
+        System.out.println(print);
+        if(!isLeaf){
+            left.PrintTreeRepresentation(depth+1);
+            right.PrintTreeRepresentation(depth+1);
+        }
     }
     
     public void PrintRepresentation(){

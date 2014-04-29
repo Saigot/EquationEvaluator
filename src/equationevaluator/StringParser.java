@@ -74,17 +74,9 @@ public class StringParser {
         if(piv != -1){
             root.op = pivobj.Operator;
             Monomial m = BareToEq_aux(b, start, piv-1);
-            if(m != null){
-                root.left = m;
-            }else{
-                root.left = new Monomial(1);
-            }
+            root.left = m;
             m = BareToEq_aux(b, piv+1, end);
-            if(m != null){
-                root.right = m;
-            }else{
-                root.right = new Monomial(1);
-            }
+            root.right = m;
             
         }else{
             MathObject m = GetNextTerm(b, start, end);
@@ -219,6 +211,11 @@ public class StringParser {
                     if(debug) System.out.print(":Treated as Var");
                     ADD.setVar(c);
                 }else{
+                    if(ADD.Operator.isFunction() && 
+                            (raw.size() <= 0 || raw.get(raw.size()-1).type == MathObject.OP_TYPE 
+                            ||raw.get(raw.size()-1).type == MathObject.BRAC_TYPE )){
+                    raw.add(new MathObject(1));
+                    }
                     if(debug) System.out.print(":Treated as Function");
                 }
                 raw.add(ADD);
@@ -240,11 +237,17 @@ public class StringParser {
                     lastbrac.add(new Character(c));
                 }
              
-            //Operations (not functions)
+            //Operations (single characters)
             }else{
                 if(debug) System.out.print(":Treated as Operator");
-                raw.add(new MathObject(Operation.GetType(
-                        Character.toString(c))));
+                MathObject m = new MathObject(Operation.GetType(
+                        Character.toString(c)));
+                if(m.Operator.isFunction() && (raw.size() <= 0 
+                        ||raw.get(raw.size()-1).type == MathObject.OP_TYPE
+                        ||raw.get(raw.size()-1).type == MathObject.BRAC_TYPE )){
+                    raw.add(new MathObject(1));
+                }
+                raw.add(m);
             }
         }
         if(error){

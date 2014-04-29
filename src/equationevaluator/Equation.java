@@ -34,4 +34,7 @@ public class Equation {
     public void PrintRepresentation(){
         root.PrintRepresentation();
     }
+    public void PrintTreeRepresentation(){
+        root.PrintTreeRepresentation(1);
+    }
 }
