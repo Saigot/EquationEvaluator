@@ -19,6 +19,7 @@ public class StringParser {
     
     public Equation ParseString(String expr){
         boolean debug = true;
+        expr = ReplaceConstants(expr);
         ArrayList<MathObject> bare = getBareRep(expr);
         //while(bare.get(0).type == 3){
         //    bare.remove(0);
@@ -34,6 +35,11 @@ public class StringParser {
         }
         return eq;
     }
+    public String ReplaceConstants(String expr){
+        expr = expr.replaceAll("e", "(" + Double.toString(Math.E) + ")");
+        expr = expr.replaceAll("(?i)pi", Double.toString(Math.PI));
+        return expr;
+    }
     public Equation BareToEq(ArrayList<MathObject> b){
         String vars = "";
         for(MathObject m : b){
@@ -45,13 +51,18 @@ public class StringParser {
         int end = b.size()-1;
         return new Equation(BareToEq_aux(b,start,end),vars);
     }
-    private MathObject GetNextTerm(ArrayList<MathObject> b, int start, int end){
+    private MathObject GetNthTerm(ArrayList<MathObject> b, int start, int end, int n){
         for(int i = start; i <= end; i++){
             if(b.get(i).type == MathObject.VAL_TYPE || b.get(i).type == MathObject.VAR_TYPE){
-                return b.get(i);
+                n--;
+                if(n <= 0){
+                    return b.get(i);
+                }
+            }else if(b.get(i).type != MathObject.BRAC_TYPE){
+                return null;
             }
         }
-        return new MathObject();
+        return null;
     }
     private Monomial BareToEq_aux(ArrayList<MathObject> b, int start, int end){
         boolean debug = true;
@@ -79,12 +90,13 @@ public class StringParser {
             root.right = m;
             
         }else{
-            MathObject m = GetNextTerm(b, start, end);
-            if(m.type == MathObject.VAL_TYPE){
+            MathObject m = GetNthTerm(b, start, end, 1);
+            if (m.type == MathObject.VAL_TYPE) {
                 return new Monomial(m.val);
-            }else if(m.type == MathObject.VAR_TYPE){
+            } else if (m.type == MathObject.VAR_TYPE) {
                 return new Monomial(m.var);
             }
+            
         }
         if(root == null){
             root = new Monomial(1);
@@ -104,7 +116,7 @@ public class StringParser {
                 System.out.println("Starting Pivot search");
                 System.out.printf("Size is %d\n",b.size());
             }
-            return 0;
+            return -1;
         }
         int index = -1;
         int pri = -1;
@@ -120,7 +132,7 @@ public class StringParser {
                     System.out.println("I Found " + obj.Operator.toString());
                     int thispri = obj.Operator.GetPriority();
                     if((thispri >= priority && level <= 0)
-                            && (index == -1 || level > lvl || (thispri < pri && level == lvl))){
+                            && (index == -1 || level > lvl || (thispri <= pri && level == lvl))){
                         System.out.printf("I Selected %s at %d %d\n",
                                 obj.Operator.toString(),i,level);
                         index = i;
@@ -173,6 +185,7 @@ public class StringParser {
     }
     
     public ArrayList<MathObject> getBareRep(String expr){
+        
         boolean error = false;//false;
         boolean debug = true;
         ArrayList<MathObject> raw = new ArrayList<>();
@@ -182,11 +195,14 @@ public class StringParser {
             char c = expr.charAt(i);
             if (debug) System.out.print("\n\"" + c + "\"");
             //Evaluates Sign as opposed to addition/subtraction, numbers
-            if(((i == 0 || raw.get(raw.size()-1).type == 2 || raw.get(raw.size()-1).type == 3) 
+            if(((raw.size() <= 0 || 
+                    raw.get(raw.size()-1).type == MathObject.OP_TYPE
+                    || (raw.get(raw.size()-1).type == MathObject.BRAC_TYPE &&
+                    isOpenBracket(raw.get(raw.size()-1).bracket))) 
                     && (c == '+' || c == '-')) || (Character.isDigit(c))){
                 if (debug) {
                     System.out.print(": ");
-                    if ((i != 0 && (raw.get(raw.size() - 1).type == 2
+                    if ((raw.size() != 0 && (raw.get(raw.size() - 1).type == 2
                             || raw.get(raw.size() - 1).type == 3))) {
                         raw.get(raw.size() - 1).PrintRepresentation();
                         System.out.print(" is type " + raw.get(raw.size() - 1).type);
@@ -209,6 +225,14 @@ public class StringParser {
                 i = scanFunctions(i, expr, ADD);
                 if(ADD.Operator == Operation.NONE){
                     if(debug) System.out.print(":Treated as Var");
+                    int lasttype;
+                    if(raw.size() > 0){
+                        lasttype = raw.get(raw.size()-1).type;
+                    }else{
+                        lasttype = -1;
+                    }
+                    if(lasttype == MathObject.VAR_TYPE || lasttype == MathObject.VAL_TYPE)
+                    {raw.add(new MathObject(Operation.MULT));}
                     ADD.setVar(c);
                 }else{
                     if(ADD.Operator.isFunction() && 
@@ -253,6 +277,8 @@ public class StringParser {
         if(error){
             System.out.printf("Error!\n");
         }
+        
+        
         return raw;
     }
     
