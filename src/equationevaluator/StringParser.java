@@ -257,6 +257,10 @@ public class StringParser {
                        raw.add(new MathObject(c,true));
                    }
                 }else{
+                    if(raw.size() > 0 && raw.get(raw.size()-1).type == MathObject.BRAC_TYPE
+                            &&  !isOpenBracket(raw.get(raw.size()-1).bracket)){
+                        raw.add(new MathObject(Operation.MULT));
+                    }
                     raw.add(new MathObject(c,true));
                     lastbrac.add(new Character(c));
                 }
