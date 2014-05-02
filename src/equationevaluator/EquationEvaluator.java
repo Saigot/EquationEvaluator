@@ -36,12 +36,8 @@ public class EquationEvaluator {
         //System.out.println(expr);
         StringParser str = new StringParser();
         //Equation eq;
-        //eq = str.ParseString(expr);
-        //System.out.println();
-        //eq.PrintTreeRepresentation();
-        //System.out.println();
-        //System.out.println(eq.peekAt("xyz", 2, 2, 2));
-        while (true) {
+        char q = 'n';
+        while (q != 'y') {
             String vars = "";
             String vals = "";
             try {
@@ -60,6 +56,12 @@ public class EquationEvaluator {
                 values[i] = Double.parseDouble(splitted[i]);
             }
             System.out.println(str.ParseString(expr).peekAt(vars, values));
+            try {
+                System.out.println("Quit? y/n");
+                q = (char)br.read();
+            } catch (IOException ex){
+                
+            }
         }
 
     }
