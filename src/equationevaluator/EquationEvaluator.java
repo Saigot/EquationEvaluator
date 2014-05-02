@@ -55,7 +55,11 @@ public class EquationEvaluator {
             for (int i = 0; i <= splitted.length - 1; i++) {
                 values[i] = Double.parseDouble(splitted[i]);
             }
-            System.out.println(str.ParseString(expr).peekAt(vars, values));
+            Equation eq = str.ParseString(expr);
+            System.out.println(eq.peekAt(vars, values));
+            eq.Simplify();
+            eq.PrintRepresentation();
+            
             try {
                 System.out.println("Quit? y/n");
                 q = (char)br.read();

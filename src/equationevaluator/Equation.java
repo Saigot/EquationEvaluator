@@ -19,7 +19,7 @@ public class Equation {
         vars = VARS;
     }
     public void Simplify(){
-        
+        root.Simplify();
     }
     
     public void EvalAt(String vars,boolean simplify, double ... val){
