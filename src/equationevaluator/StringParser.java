@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package equationevaluator;
 
 import com.sun.xml.internal.ws.api.pipe.NextAction;
@@ -11,12 +7,17 @@ import java.util.Stack;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- *
+ * A class that converts a human readable string into an equation type
  * @author michael
  */
 public class StringParser {
     
     
+    /**
+     *
+     * @param expr the string to convert to an equation
+     * @return
+     */
     public Equation ParseString(String expr){
         boolean debug = true;
         expr = ReplaceConstants(expr);
@@ -35,12 +36,14 @@ public class StringParser {
         }
         return eq;
     }
-    public String ReplaceConstants(String expr){
+    
+    private String ReplaceConstants(String expr){
         expr = expr.replaceAll("e", "(" + Double.toString(Math.E) + ")");
         expr = expr.replaceAll("(?i)pi", Double.toString(Math.PI));
         return expr;
     }
-    public Equation BareToEq(ArrayList<MathObject> b){
+    
+    private Equation BareToEq(ArrayList<MathObject> b){
         String vars = "";
         for(MathObject m : b){
             if(m.type == MathObject.VAR_TYPE && vars.indexOf(m.var) != -1){
@@ -104,10 +107,10 @@ public class StringParser {
         
         return root;
     }
-    public int GetPivot(ArrayList<MathObject> b, int start, int priority, int level){
+    private int GetPivot(ArrayList<MathObject> b, int start, int priority, int level){
         return GetPivot(b, start, b.size()-1,priority, level);
     }
-    public int GetPivot(ArrayList<MathObject> b, int start, int end, int priority, int level){
+    private int GetPivot(ArrayList<MathObject> b, int start, int end, int priority, int level){
         boolean debug = true;
         if(debug){
                 System.out.println("Starting Pivot search");}
@@ -154,21 +157,14 @@ public class StringParser {
         System.out.println("Returning the Pivot:" + index);
         return index;
     }
-    public int findNextOperand(String expr, int pri){
-        
-        return 0;
-    }    
-    
-    public boolean isIgnored(char c){
+    private boolean isIgnored(char c){
         return c == ' ';
     }
-    
-    public boolean isBracket(char c){
+    private boolean isBracket(char c){
         return c == '(' || c == ')' || c == '[' || c == ']'
                 || c == '{' || c == '}';
     }
-    
-    public boolean BracketsClose(char o, char c){
+    private boolean BracketsClose(char o, char c){
         switch(o){
             case '(':
                 return c == ')';
@@ -180,12 +176,10 @@ public class StringParser {
                 return false;
         }
     }
-    public boolean isOpenBracket(char b){
+    private boolean isOpenBracket(char b){
         return b == '(' || b == '[' || b == '{';
     }
-    
-    public ArrayList<MathObject> getBareRep(String expr){
-        
+    private ArrayList<MathObject> getBareRep(String expr){     
         boolean error = false;//false;
         boolean debug = true;
         ArrayList<MathObject> raw = new ArrayList<>();
@@ -286,6 +280,13 @@ public class StringParser {
         return raw;
     }
     
+    /**
+     * Scans a number into <val>
+     * @param i the index of the starting point within the <expr>
+     * @param expr the expression being parsed
+     * @param val will be mutated to contain the number that is scanned, if a number is found, no change otherwise
+     * @return the index that is greater than <i> which is after the first digit of the scanned number
+     */
     public int scanNumber(int i, String expr, MathObject val){
         char first = expr.charAt(i);
         String eval = ""; 
@@ -315,12 +316,19 @@ public class StringParser {
         val.setVal(d);
         return i - 1;
     }
-    public int scanFunctions(int i, String Expr, MathObject op){
+    /**
+     * scans a function into <val>
+     * @param i the index of the starting point within the <expr>
+     * @param expr the expression being parsed
+     * @param op will be mutated to contain the function that is scanned, if a function is found, no change otherwise
+     * @return the index that is greater than <i> which is after the first digit of the scanned number
+     */
+    public int scanFunctions(int i, String expr, MathObject op){
         int org = i;
         String func = "";
-        for(; i < Expr.length(); i++){
-            if(Character.isAlphabetic(Expr.charAt(i))){
-                func += Expr.charAt(i);
+        for(; i < expr.length(); i++){
+            if(Character.isAlphabetic(expr.charAt(i))){
+                func += expr.charAt(i);
                 Operation temp = Operation.GetType(func);
                 if(temp != Operation.NONE){
                     op.setOperation(temp);
@@ -333,11 +341,21 @@ public class StringParser {
         return org;
     }
     
+    /**
+     * Debug only, prints  a list of mathobjects
+     * @param m the mathobject list to be printed
+     */
     public void PrintBareBones(ArrayList<MathObject> m){
         for(MathObject math : m){
             math.PrintRepresentation();
         }
     }
+    /**
+     * Debug only, prints the Represntation of a list of math objects.
+     * @param m the mathobject list to be printed
+     * @param start the start index
+     * @param end the end index
+     */
     public void PrintBareBones(ArrayList<MathObject> m, int start, int end){
         if (start > end) return;
         for(int i = start; i <= end; i++){

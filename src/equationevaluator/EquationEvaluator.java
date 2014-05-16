@@ -58,6 +58,7 @@ public class EquationEvaluator {
             Equation eq = str.ParseString(expr);
             System.out.println(eq.peekAt(vars, values));
             eq.PrintRepresentation();
+            //eq.PrintTreeRepresentation();
             
             try {
                 System.out.println("\nQuit? y/n");

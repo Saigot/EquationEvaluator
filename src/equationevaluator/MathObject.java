@@ -1,11 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package equationevaluator;
 
 /**
- *
+ * A union of variables, operators and bracket types
  * @author michael
  */
 public class MathObject {
@@ -21,11 +18,20 @@ public class MathObject {
     char bracket;
     
     int type;// -1, indeterminint, 0 for var, 1 for val and 2 for operator, 3 for bracket
+    /**
+     * Initializes math object as a variable
+     * @param c the variable, that mathobject will represent
+     */
     public MathObject(char c){
         var = c;
         type = 0;
     }
     
+    /**
+     * Initializes math object as a variable or bracket
+     * @param c the variable or bracket that mathobject will represent
+     * @param brac if true <c> is a bracket, if false <c> is a variable
+     */
     public MathObject(char c, boolean brac){
         if(brac){
             bracket = c;
@@ -36,36 +42,69 @@ public class MathObject {
         }
     }
     
+    /**
+     * Initializes Math object as a value
+     * @param d the value that the mathobject will represent
+     */
     public MathObject(double d){
         val = d;
         type = 1;
     }
     
+    /**
+     * Initializes Mathobject as a Operation
+     * @param op the Operation that math object will represent
+     */
     public MathObject(Operation op){
         Operator = op;
         type = 2;
     }
-      public MathObject(){
+      /**
+     * Initializes MathObject as a none type
+     */
+    public MathObject(){
           type = -1;
       }
     
-    public void setVar(char c){
+    /**
+     * Makes math object a variable
+     * @param var The variable to be set as
+     */
+    public void setVar(char var){
        type = 0;
-       var = c;
+       this.var = var;
     }
-    public void setVal(double d){ //hehe double d
+    /**
+     * Makes math object a value
+     * @param d the double to be set as
+     */
+    public void setVal(double d){
         type = 1;
         val = d;
     }
+    /**
+     * Makes math object an operation
+     * @param op the operation to be set as
+     */
     public void setOperation(Operation op){
         type = 2;
         Operator = op;
     }
-    public void setBracket(char c){
+    /**
+     * Sets the Mathobject to a bracket
+     * 
+     * @param brac The bracket to be set as
+     */
+    public void setBracket(char brac){
         type = 3;
-        bracket = c;
+        bracket = brac;
     }
     
+    /**
+     * Compares this object with <m>
+     * @param m The mathobject to compare to this object
+     * @return true if mathobjects are identical, false otherwise or if non type
+     */
     public boolean isEqual(MathObject m){
         if(m.type != type){
             return false;
@@ -84,6 +123,9 @@ public class MathObject {
         }
     }
     
+    /**
+     * Prints the value represented by this object
+     */
     public void PrintRepresentation(){
         switch(type){
             case 0:

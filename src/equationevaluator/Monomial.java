@@ -1,11 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package equationevaluator;
 /**
- *
- * @author michael
+ * A recursive class which represents an equation tree, contains either an operator, variable or value.
+ * If  Monomial is a leaf it is either a value or variable, if the Monomial is a node, then is it a operator with left and right Monomials
+ * @author Michael Scovell
  */
 public class Monomial {
     Operation op;
@@ -17,6 +15,12 @@ public class Monomial {
     
     boolean isLeaf;
     boolean isVar = false;
+    /**
+     * Initializes this Monomial as a node
+     * @param l The left side of the tree
+     * @param r The right side of the tree
+     * @param o The operator this monomial represents
+     */
     public Monomial(Monomial l, Monomial r, Operation o){
         op = o;
         left = l;
@@ -24,44 +28,39 @@ public class Monomial {
         isLeaf = false;
     }
     
+    /**
+     *  
+     */
     public Monomial(){
         
     }
+    /**
+     * Makes Monomial a leaf node with the value <d>
+     * @param d The value this Monomial will represent
+     */
     public Monomial(double d){
         isLeaf = true;
         isVar = false;
         val = d;
     }
     
-    public Monomial(char c) {
+    /**
+     * Makes this Monomial a leaf node with a variable <var>
+     * @param var The variable this Monomial will represent
+     */
+    public Monomial(char var) {
         isLeaf = true;
         isVar = true;
-        var = c;
+        this.var = var;
     }
     
-    public boolean isOnlyVar(){
-        if(isLeaf){
-            return isVar;
-        }
-        boolean b = left.isOnlyVar();
-        if(b){
-           b = right.isOnlyVar(); 
-        }
-        return b;
-    }
-    public String GatherVar(){
-        String res = "";
-        if(isLeaf && isVar){
-            res += var;
-        }else if(isLeaf){
-            return res;
-        }else{
-            res += left.GatherVar();
-            res += right.GatherVar();
-        }
-        return res;
-    }
-    
+   
+    /**
+     * Evaluates the monomial below with each instance of a variable replaced with a corresponding value
+     * @param vars The variables that will be replaced by the corresponding <vals>
+     * @param vals The values that will replaces the varaibes in <vars>
+     * @return the value if every child of this object had it's <vars> replaced with the corresponding <vals>
+     */
     public double PeekAt(String vars, double ... vals){
         boolean debug = true;
         if(isLeaf){
@@ -84,6 +83,11 @@ public class Monomial {
     }
     
     
+    /**
+     * Prints <depth> followed by the value represented by this object and then 
+     * runs this function to all children starting with <left>
+     * @param depth How deeply this tree has been recursed
+     */
     public void PrintTreeRepresentation(int depth){
         String print = Integer.toString(depth) + ". ";
         if(isLeaf){
@@ -102,6 +106,9 @@ public class Monomial {
         }
     }
     
+    /**
+     * Prints this and all it's childrens values iwth brackets on either side of the form (left this right)
+     */
     public void PrintRepresentation(){
         if(isLeaf){
             if(isVar){
@@ -122,6 +129,10 @@ public class Monomial {
         }
         
     }
+    /**
+     * Same as PrintTreeRepresentation but returns  a string instead of printing
+     * @return The string of form ( left this right )
+     */
     public String PrintStrRepresentation(){
         String res = "";
         if(isLeaf){
