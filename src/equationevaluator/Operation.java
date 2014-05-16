@@ -5,10 +5,10 @@
 package equationevaluator;
 public enum Operation {
     
-    EXP ("^",3), LOG("&log",3),
-    FAC("&fac",3), ABS("&abs",3),
-    SIN("&sin",3), COS("&cos",3),TAN("&tan",3),
-    SIH("&sih", 3), COH("&coh",3),TAH("&tah", 3),
+    EXP ("^",3), LOG("log",3), LN("ln",3),
+    FAC("fac",3), ABS("abs",3),
+    SIN("sin",3), COS("cos",3),TAN("tan",3),
+    SIH("sih", 3), COH("coh",3),TAH("tah", 3),
     MULT ("*",2),DIV ("/",2),DIF("%",2),
     ADD ("+",1), SUB("-",1),NONE (" ",Integer.MIN_VALUE);
     
@@ -68,6 +68,8 @@ public enum Operation {
                 return TAH;
             case "log":
                 return LOG;
+            case "ln":
+                return LN;
             case "^":
                 return EXP;
             case "mod":
@@ -89,7 +91,7 @@ public enum Operation {
     
     public boolean isFunction(){
         return  this==SIN||this==COS||this==TAN||this==FAC||this==ABS||this==LOG
-                ||this==COH||this==SIH||this==TAH;
+                ||this==LN||this==COH||this==SIH||this==TAH;
     }
     public String GetSymbol(){
         return value;
@@ -130,6 +132,8 @@ public enum Operation {
                 return val1 * Math.abs(val2);
             case LOG:
                 return val1*Math.log10(val2);
+            case LN:
+                return val1*Math.log(val2);
             case NONE:
             default:
                 //error

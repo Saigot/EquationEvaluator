@@ -57,12 +57,12 @@ public class EquationEvaluator {
             }
             Equation eq = str.ParseString(expr);
             System.out.println(eq.peekAt(vars, values));
-            eq.Simplify();
             eq.PrintRepresentation();
             
             try {
-                System.out.println("Quit? y/n");
+                System.out.println("\nQuit? y/n");
                 q = (char)br.read();
+                br.readLine();
             } catch (IOException ex){
                 
             }

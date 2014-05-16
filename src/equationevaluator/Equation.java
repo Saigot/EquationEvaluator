@@ -18,14 +18,6 @@ public class Equation {
         root = ROOT;
         vars = VARS;
     }
-    public void Simplify(){
-        root.Simplify();
-    }
-    
-    public void EvalAt(String vars,boolean simplify, double ... val){
-        
-        if(simplify)Simplify();
-    }
     
     public double peekAt(String vars, double ... val){
         return root.PeekAt(vars, val);
