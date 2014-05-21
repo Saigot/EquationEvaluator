@@ -38,7 +38,7 @@ public class StringParser {
     }
     
     private String ReplaceConstants(String expr){
-        expr = expr.replaceAll("e", "(" + Double.toString(Math.E) + ")");
+        expr = expr.replaceAll("e", Double.toString(Math.E));
         expr = expr.replaceAll("(?i)pi", Double.toString(Math.PI));
         return expr;
     }
@@ -97,7 +97,7 @@ public class StringParser {
             if (m.type == MathObject.VAL_TYPE) {
                 return new Monomial(m.val);
             } else if (m.type == MathObject.VAR_TYPE) {
-                return new Monomial(m.var);
+                return new Monomial(m.var,m.sign);
             }
             
         }
@@ -203,12 +203,20 @@ public class StringParser {
                     }
                     System.out.println(", Treated as Number");
                 }
-                MathObject obj = new MathObject();
-                i = scanNumber(i,expr,obj);
-                if(obj.type == -1){
-                    obj.setOperation(Operation.GetType(Character.toString(c)));
-                }
-                raw.add(obj);
+                MathObject num = new MathObject();
+                MathObject op = new MathObject();
+                int temp;
+                i = scanNumber(i,expr,num);
+                temp = scanFunctions(i, expr, op);
+                if (num.type == -1 && op.type == -1 && i < expr.length() &&
+                        Character.isAlphabetic(expr.charAt(i+1))){
+                    i++;
+                    boolean sign = c == '-' ? false : true;
+                    num.setVar(expr.charAt(i),sign);
+                }else if(num.type == -1){
+                    num.setOperation(Operation.GetType(Character.toString(c)));
+                } 
+                raw.add(num);
             //Continues if ignorable character
             }else if(isIgnored(c)){
                 if(debug) System.out.print(":Ignored");
@@ -227,7 +235,7 @@ public class StringParser {
                     }
                     if(lasttype == MathObject.VAR_TYPE || lasttype == MathObject.VAL_TYPE)
                     {raw.add(new MathObject(Operation.MULT));}
-                    ADD.setVar(c);
+                    ADD.setVar(c, true);
                 }else{
                     if(ADD.Operator.isFunction() && 
                             (raw.size() <= 0 || raw.get(raw.size()-1).type == MathObject.OP_TYPE 
@@ -248,14 +256,14 @@ public class StringParser {
                    }else if(!BracketsClose(last, c)){
                        error = true;
                    }else{
-                       raw.add(new MathObject(c,true));
+                       raw.add(new MathObject(c,true,true));
                    }
                 }else{
                     if(raw.size() > 0 && raw.get(raw.size()-1).type == MathObject.BRAC_TYPE
                             &&  !isOpenBracket(raw.get(raw.size()-1).bracket)){
                         raw.add(new MathObject(Operation.MULT));
                     }
-                    raw.add(new MathObject(c,true));
+                    raw.add(new MathObject(c,true,true));
                     lastbrac.add(new Character(c));
                 }
              

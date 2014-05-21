@@ -14,6 +14,7 @@ public class MathObject {
     
     char var;
     double val;
+    boolean sign;
     Operation Operator = Operation.NONE;
     char bracket;
     
@@ -22,21 +23,18 @@ public class MathObject {
      * Initializes math object as a variable
      * @param c the variable, that mathobject will represent
      */
-    public MathObject(char c){
-        var = c;
-        type = 0;
-    }
     
     /**
      * Initializes math object as a variable or bracket
      * @param c the variable or bracket that mathobject will represent
      * @param brac if true <c> is a bracket, if false <c> is a variable
      */
-    public MathObject(char c, boolean brac){
+    public MathObject(char c, boolean brac, boolean sign){
         if(brac){
             bracket = c;
             type = 3;
         }else{
+            this.sign = sign;
             var = c;
             type = 0;
         }
@@ -70,8 +68,9 @@ public class MathObject {
      * Makes math object a variable
      * @param var The variable to be set as
      */
-    public void setVar(char var){
+    public void setVar(char var, boolean sign){
        type = 0;
+       this.sign = sign;
        this.var = var;
     }
     /**

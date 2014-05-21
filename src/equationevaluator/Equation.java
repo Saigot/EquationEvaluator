@@ -40,6 +40,11 @@ public class Equation {
     public void PrintRepresentation(){
         root.PrintRepresentation();
     }
+    
+    public boolean isWellFormed(){
+        if(root == null) return false;
+        else return root.isWellFormed();
+    }
     /**
      * Prints the depth of the monomial  followed by the monomial
      * for all monomials in the equation.

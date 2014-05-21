@@ -12,6 +12,7 @@ public class Monomial {
     Monomial right = null;
     double val;
     char var;
+    boolean sign;
     
     boolean isLeaf;
     boolean isVar = false;
@@ -48,9 +49,10 @@ public class Monomial {
      * Makes this Monomial a leaf node with a variable <var>
      * @param var The variable this Monomial will represent
      */
-    public Monomial(char var) {
+    public Monomial(char var, boolean sign) {
         isLeaf = true;
         isVar = true;
+        this.sign = sign;
         this.var = var;
     }
     
@@ -69,7 +71,8 @@ public class Monomial {
                 if(index == -1){
                     val = 0;
                 }else{
-                    val = vals[index];
+                    int s = sign ? 1 : -1;
+                    val = s*vals[index];
                 }
             }
         }else{
@@ -82,7 +85,11 @@ public class Monomial {
         return val;
     }
     
-    
+    public boolean isWellFormed(){
+        if((!isLeaf && (left == null || right == null))) return false;
+        else if(!isLeaf && op == Operation.NONE) return false;
+        else return left.isWellFormed() && right.isWellFormed();
+    }
     /**
      * Prints <depth> followed by the value represented by this object and then 
      * runs this function to all children starting with <left>
@@ -112,7 +119,10 @@ public class Monomial {
     public void PrintRepresentation(){
         if(isLeaf){
             if(isVar){
-                System.out.print(var);
+                if(sign)
+                    System.out.print(var);
+                else
+                    System.out.print("-" + var);
             }else{
                 System.out.print(val);
             }
